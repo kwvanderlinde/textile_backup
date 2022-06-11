@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -9,9 +9,6 @@ targetCompatibility = JavaVersion.VERSION_17
 archivesBaseName = project.archives_base_name
 version = "${project.mod_version}-${getMcMinor(project.minecraft_version)}"
 group = project.maven_group
-
-minecraft {
-}
 
 repositories{
 	maven { url 'https://jitpack.io' }
@@ -55,7 +52,7 @@ dependencies {
 	include "com.github.shevek:parallelgzip:${project.pgzip_commit_hash}"
 
 	// Lazy DFU makes the dev env start up much faster by loading DataFixerUpper lazily, which would otherwise take a long time. We rarely need it anyway.
-	modRuntime("com.github.astei:lazydfu:${project.lazydfu_version}") {
+	modRuntimeOnly("com.github.astei:lazydfu:${project.lazydfu_version}") {
 		exclude(module: "fabric-loader")
 	}
 }
@@ -73,6 +70,7 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
+	it.options.release = 17
 }
 java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
