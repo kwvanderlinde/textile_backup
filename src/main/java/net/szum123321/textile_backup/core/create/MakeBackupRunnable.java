@@ -118,7 +118,7 @@ public class MakeBackupRunnable implements Runnable {
             if(config.get().broadcastBackupDone) {
                 Utilities.notifyPlayers(
                         context.getServer(),
-                        context.getInitiatorUUID(),
+                        context.getCommandSource().getChatMessageSender(),
                         "Done!"
                 );
             } else {

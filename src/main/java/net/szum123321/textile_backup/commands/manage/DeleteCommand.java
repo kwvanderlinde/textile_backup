@@ -70,7 +70,7 @@ public class DeleteCommand {
                     log.sendInfo(source, "File {} successfully deleted!", optionalFile.get().getName());
 
                     if(source.getEntity() instanceof PlayerEntity)
-                        log.info("Player {} deleted {}.", source.getPlayer().getName(), optionalFile.get().getName());
+                        log.info("Player {} deleted {}.", source.getPlayerOrThrow().getName(), optionalFile.get().getName());
                 } else {
                     log.sendError(source, "Something went wrong while deleting file!");
                 }
