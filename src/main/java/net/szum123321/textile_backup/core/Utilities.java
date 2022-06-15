@@ -34,6 +34,7 @@ import net.szum123321.textile_backup.config.ConfigPOJO;
 import net.szum123321.textile_backup.Statics;
 import net.szum123321.textile_backup.mixin.MinecraftServerSessionAccessor;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,14 +50,19 @@ public class Utilities {
 	private final static ConfigHelper config = ConfigHelper.INSTANCE;
 	private final static TextileLogger log = new TextileLogger(TextileBackup.MOD_NAME);
 
-	public static void notifyPlayers(MinecraftServer server, MessageSender sender, String msg) {
+	public static void notifyPlayers(MinecraftServer server, @Nullable MessageSender sender, String msg) {
 		MutableText message = log.getPrefixText();
 		message.append(Text.literal(msg).formatted(Formatting.WHITE));
 
-		server.getPlayerManager().broadcast(
-				SignedMessage.of(message),
-				sender,
-				MessageType.SYSTEM);
+		if (sender == null) {
+			server.getPlayerManager().broadcast(message, MessageType.SYSTEM);
+		}
+		else {
+			server.getPlayerManager().broadcast(
+					SignedMessage.of(message),
+					sender,
+					MessageType.SYSTEM);
+		}
 	}
 
 	public static String getLevelName(MinecraftServer server) {

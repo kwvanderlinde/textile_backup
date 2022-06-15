@@ -19,6 +19,7 @@
 package net.szum123321.textile_backup.core.restore;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.message.MessageSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Util;
@@ -50,10 +51,22 @@ public record RestoreContext(RestoreHelper.RestoreableFile file,
         return initiator;
     }
 
-    public UUID getInitiatorUUID() {
-        return initiator.equals(ActionInitiator.Player) && commandSource.getEntity() != null ? commandSource.getEntity().getUuid(): Util.NIL_UUID;
+    /**
+     * @return If backup was started by a player, return the corresponding message sender. Otherwise
+     * null.
+     *
+     * @see net.minecraft.network.message.MessageSender
+     */
+    public @org.jetbrains.annotations.Nullable MessageSender getInitiatorAsMessageSender() {
+        return initiator.equals(ActionInitiator.Player) && commandSource.getEntity() != null ? commandSource.getChatMessageSender() : null;
     }
 
+    /**
+     * Only non-null when explicitly started by a command
+     * ({@link net.szum123321.textile_backup.core.ActionInitiator#Player} or
+     * {@link net.szum123321.textile_backup.core.ActionInitiator#ServerConsole}).
+     */
+    @org.jetbrains.annotations.Nullable
     public ServerCommandSource getCommandSource() {
         return commandSource;
     }

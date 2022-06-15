@@ -39,7 +39,7 @@ public class BackupHelper {
 	public static Runnable create(BackupContext ctx) {
 		if(config.get().broadcastBackupStart) {
 			Utilities.notifyPlayers(ctx.getServer(),
-					ctx.getCommandSource().getChatMessageSender(),
+					ctx.getInitiatorAsMessageSender(),
 					"Warning! Server backup will begin shortly. You may experience some lag."
 			);
 		} else {

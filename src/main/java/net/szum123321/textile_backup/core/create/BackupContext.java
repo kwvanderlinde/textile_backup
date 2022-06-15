@@ -19,14 +19,16 @@
 package net.szum123321.textile_backup.core.create;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.message.MessageSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.szum123321.textile_backup.core.ActionInitiator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public record BackupContext(@NotNull MinecraftServer server,
                             ServerCommandSource commandSource,
-                            ActionInitiator initiator,
+                            @NotNull ActionInitiator initiator,
                             boolean save,
                             String comment) {
 
@@ -34,12 +36,28 @@ public record BackupContext(@NotNull MinecraftServer server,
         return server;
     }
 
+    /**
+     * Only non-null when explicitly started by a command
+     * ({@link net.szum123321.textile_backup.core.ActionInitiator#Player} or
+     * {@link net.szum123321.textile_backup.core.ActionInitiator#ServerConsole}).
+     */
+    @Nullable
     public ServerCommandSource getCommandSource() {
         return commandSource;
     }
 
     public ActionInitiator getInitiator() {
         return initiator;
+    }
+
+    /**
+     * @return If backup was started by a player, return the corresponding message sender. Otherwise
+     * null.
+     *
+     * @see net.minecraft.network.message.MessageSender
+     */
+    public @Nullable MessageSender getInitiatorAsMessageSender() {
+        return initiator.equals(ActionInitiator.Player) && commandSource.getEntity() != null ? commandSource.getChatMessageSender() : null;
     }
 
     public boolean startedByPlayer() {

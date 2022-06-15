@@ -59,7 +59,7 @@ public class RestoreHelper {
 
         Utilities.notifyPlayers(
                 ctx.server(),
-                ctx.getCommandSource().getChatMessageSender(),
+                ctx.getInitiatorAsMessageSender(),
                 "Warning! The server is going to shut down in " + config.get().restoreDelay + " seconds!"
         );
 
